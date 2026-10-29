@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Now - Real-time Weather Updates 🌤️</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌤️</text></svg>">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-background">
+        <div class="sun"></div>
+        <div class="cloud cloud1">☁️</div>
+        <div class="cloud cloud2">☁️</div>
+        <div class="cloud cloud3">☁️</div>
+        <div class="cloud cloud4">☁️</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <header>
+            <h1>Weather Now</h1>
+            <p class="subtitle">Get real-time weather updates for any city</p>
+        </header>
+
+        <!-- Search Section -->
+        <div class="search-container">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="cityInput" 
+                    placeholder="Search for a city..." 
+                    autocomplete="off"
+                >
+                <button id="searchBtn">Search</button>
+            </div>
+            <div id="suggestions" class="modern-suggestions"></div>
+            <div id="errorMessage" class="modern-error-message"></div>
+        </div>
+
+        <!-- Popular Cities -->
+        <div class="featured-cities">
+            <h3>✨ Explore Popular Cities</h3>
+            <div class="city-buttons">
+                <button class="city-btn" onclick="searchCity('New Delhi')">
+                    <span class="city-emoji">🏛️</span>
+                    New Delhi
+                </button>
+                <button class="city-btn" onclick="searchCity('Mumbai')">
+                    <span class="city-emoji">🌊</span>
+                    Mumbai
+                </button>
+                <button class="city-btn" onclick="searchCity('Bangalore')">
+                    <span class="city-emoji">💻</span>
+                    Bangalore
+                </button>
+                <button class="city-btn" onclick="searchCity('Kolkata')">
+                    <span class="city-emoji">🎭</span>
+                    Kolkata
+                </button>
+                <button class="city-btn" onclick="searchCity('Chennai')">
+                    <span class="city-emoji">🏖️</span>
+                    Chennai
+                </button>
+                <button class="city-btn" onclick="searchCity('Noida')">
+                    <span class="city-emoji">🏢</span>
+                    Noida
+                </button>
+                <button class="city-btn" onclick="searchCity('Pune')">
+                    <span class="city-emoji">🎓</span>
+                    Pune
+                </button>
+                <button class="city-btn" onclick="searchCity('Jaipur')">
+                    <span class="city-emoji">🕌</span>
+                    Jaipur
+                </button>
+            </div>
+        </div>
+
+        <footer>
+            <p>Powered by OpenWeatherMap API</p>
+        </footer>
+    </div>
+
+    <script src="../javascript/weather.js"></script>
+    <script>
+        function searchCity(cityName) {
+            window.location.href = `results.html?city=${encodeURIComponent(cityName)}`;
+        }
+    </script>
+</body>
+</html>

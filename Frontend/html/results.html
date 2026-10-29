@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Results - WeatherNow 🌤️</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌤️</text></svg>">
+    <link rel="stylesheet" href="../css/results.css?v=2.0">
+</head>
+<body>
+    <!-- Animated Weather Background -->
+    <div class="weather-sky-bg">
+        <div class="floating-cloud cloud-1">☁️</div>
+        <div class="floating-cloud cloud-2">☁️</div>
+        <div class="floating-cloud cloud-3">☁️</div>
+        <div class="floating-cloud cloud-4">☁️</div>
+        <div class="sun-glow"></div>
+        <div class="weather-sparkles">
+            <span class="sparkle">✨</span>
+            <span class="sparkle">✨</span>
+            <span class="sparkle">✨</span>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="back-nav-container">
+        <a href="index.html" class="glass-back-button">
+            <span class="back-arrow">←</span>
+            <span class="back-text">Back to Search</span>
+        </a>
+    </div>
+
+    <!-- Loading Animation -->
+    <div id="loadingSpinner" class="modern-loading-container">
+        <div class="loading-weather-animation">
+            <div class="loading-sun">☀️</div>
+            <div class="loading-cloud">☁️</div>
+            <div class="loading-rain">💧</div>
+        </div>
+        <p class="loading-message">Fetching weather data...</p>
+        <div class="loading-dots">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    <div id="errorMessage" class="modern-error-container">
+        <div class="error-emoji">⛈️</div>
+        <h2 class="error-heading">Oops! Something went wrong</h2>
+        <p id="errorText" class="error-description"></p>
+        <a href="index.html" class="retry-button">
+            <span>🔄</span>
+            Try Again
+        </a>
+    </div>
+
+    <!-- Main Weather Container -->
+    <div id="weatherContainer" class="modern-weather-container">
+        <!-- Hero Weather Card -->
+        <div class="weather-hero-card">
+            <div class="city-location-header">
+                <div class="location-badge">
+                    <span class="location-pin">📍</span>
+                    <div class="location-text">
+                        <h1 id="cityName" class="city-title">City Name</h1>
+                        <p id="country" class="country-subtitle">Country</p>
+                    </div>
+                </div>
+                <p id="lastUpdated" class="update-time">Updated: --</p>
+            </div>
+            
+            <div class="main-weather-display">
+                <div class="weather-visual">
+                    <div class="icon-backdrop"></div>
+                    <img id="weatherIcon" src="" alt="Weather icon" class="main-weather-icon">
+                </div>
+                <div class="temperature-section">
+                    <h2 id="temperature" class="main-temperature">--°</h2>
+                    <p id="weatherDescription" class="weather-condition">Description</p>
+                    <div class="feels-like-badge">
+                        <span class="badge-icon">🌡️</span>
+                        Feels like <span id="feelsLike" class="feels-value">--°C</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="temp-range-bar">
+                <div class="range-item min-temp">
+                    <span class="range-icon">❄️</span>
+                    <div class="range-text">
+                        <span class="range-label">Min</span>
+                        <span id="tempMin" class="range-value">--°</span>
+                    </div>
+                </div>
+                <div class="range-separator"></div>
+                <div class="range-item max-temp">
+                    <span class="range-icon">🔥</span>
+                    <div class="range-text">
+                        <span class="range-label">Max</span>
+                        <span id="tempMax" class="range-value">--°</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weather Details Grid -->
+        <div class="weather-details-grid">
+            <!-- Wind Speed Card -->
+            <div class="glass-detail-card">
+                <div class="card-icon-bubble wind-icon">💨</div>
+                <div class="card-info">
+                    <p class="detail-label">Wind Speed</p>
+                    <p id="windSpeed" class="detail-value">-- m/s</p>
+                </div>
+                <div class="card-decoration"></div>
+            </div>
+
+            <!-- Wind Direction Card -->
+            <div class="glass-detail-card">
+                <div class="card-icon-bubble compass-icon">🧭</div>
+                <div class="card-info">
+                    <p class="detail-label">Direction</p>
+                    <p id="windDirection" class="detail-value">--</p>
+                </div>
+                <div class="card-decoration"></div>
+            </div>
+
+            <!-- Wind Gust Card -->
+            <div class="glass-detail-card">
+                <div class="card-icon-bubble gust-icon">🌪️</div>
+                <div class="card-info">
+                    <p class="detail-label">Wind Gust</p>
+                    <p id="windGust" class="detail-value">-- m/s</p>
+                </div>
+                <div class="card-decoration"></div>
+            </div>
+
+            <!-- Humidity Card -->
+            <div class="glass-detail-card">
+                <div class="card-icon-bubble humidity-icon">💧</div>
+                <div class="card-info">
+                    <p class="detail-label">Humidity</p>
+                    <p id="humidity" class="detail-value">--%</p>
+                </div>
+                <div class="card-decoration"></div>
+            </div>
+
+            <!-- Pressure Card -->
+            <div class="glass-detail-card">
+                <div class="card-icon-bubble pressure-icon">🎈</div>
+                <div class="card-info">
+                    <p class="detail-label">Pressure</p>
+                    <p id="pressure" class="detail-value">-- hPa</p>
+                </div>
+                <div class="card-decoration"></div>
+            </div>
+
+            <!-- Visibility Card -->
+            <div class="glass-detail-card">
+                <div class="card-icon-bubble visibility-icon">👁️</div>
+                <div class="card-info">
+                    <p class="detail-label">Visibility</p>
+                    <p id="visibility" class="detail-value">-- km</p>
+                </div>
+                <div class="card-decoration"></div>
+            </div>
+
+            <!-- Cloud Cover Card -->
+            <div class="glass-detail-card">
+                <div class="card-icon-bubble cloud-icon">☁️</div>
+                <div class="card-info">
+                    <p class="detail-label">Cloud Cover</p>
+                    <p id="cloudCover" class="detail-value">--%</p>
+                </div>
+                <div class="card-decoration"></div>
+            </div>
+        </div>
+
+        <!-- Sun Times Section -->
+        <div class="sun-times-display">
+            <h3 class="sun-section-title">
+                <span class="title-icon">🌞</span>
+                Sun Schedule
+                <span class="title-icon">🌙</span>
+            </h3>
+            <div class="sun-cards-container">
+                <div class="sun-glass-card sunrise">
+                    <div class="sun-icon-large">🌅</div>
+                    <div class="sun-info">
+                        <p class="sun-label">Sunrise</p>
+                        <p id="sunrise" class="sun-time">--:--</p>
+                    </div>
+                    <div class="sun-glow-effect sunrise-glow"></div>
+                </div>
+                <div class="sun-glass-card sunset">
+                    <div class="sun-icon-large">🌇</div>
+                    <div class="sun-info">
+                        <p class="sun-label">Sunset</p>
+                        <p id="sunset" class="sun-time">--:--</p>
+                    </div>
+                    <div class="sun-glow-effect sunset-glow"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="results-footer">
+            <div class="footer-glass-card">
+                <p class="footer-credit">
+                    <span class="credit-icon">⚡</span>
+                    Powered by OpenWeatherMap API
+                </p>
+                <button onclick="window.location.href='index.html'" class="new-search-glass-btn">
+                    <span class="btn-emoji">🔍</span>
+                    <span>Search Another City</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../javascript/results.js?v=2.0"></script>
+</body>
+</html>

@@ -1,0 +1,539 @@
+/* Weather Website - Matching Results Page Theme */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --sky-gradient-start: #87CEEB;
+    --sky-gradient-mid: #B0D9F5;
+    --sky-gradient-end: #E0F2FF;
+    --sun-yellow: #FFD93D;
+    --sun-orange: #FFA931;
+    --text-dark: #2C3E50;
+    --text-light: #34495E;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Animated Background - Same as Results */
+.animated-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+        #87CEEB 0%,
+        #B0D9F5 30%,
+        #E0F2FF 70%,
+        #FFE5B4 100%
+    );
+    z-index: -1;
+    animation: skyTransition 45s ease-in-out infinite;
+}
+
+@keyframes skyTransition {
+    0%, 100% {
+        background: linear-gradient(to bottom, #87CEEB 0%, #B0D9F5 30%, #E0F2FF 70%, #FFE5B4 100%);
+    }
+    50% {
+        background: linear-gradient(to bottom, #4A90E2 0%, #7CB8F7 30%, #B8E0FF 70%, #FFC0CB 100%);
+    }
+}
+
+/* Sun Animation */
+.sun {
+    position: absolute;
+    top: 50px;
+    right: 80px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, #FFD93D 0%, #FFA931 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 60px rgba(255, 217, 61, 0.8);
+    animation: sunPulse 4s ease-in-out infinite;
+}
+
+@keyframes sunPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 60px rgba(255, 217, 61, 0.8);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 80px rgba(255, 217, 61, 1);
+    }
+}
+
+/* Cloud Animations - Same as Results */
+.cloud {
+    position: absolute;
+    font-size: 3.5rem;
+    opacity: 0.6;
+    animation: cloudFloat 50s linear infinite;
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.cloud1 {
+    top: 8%;
+    left: -10%;
+    animation-duration: 45s;
+}
+
+.cloud2 {
+    top: 25%;
+    left: -12%;
+    animation-duration: 55s;
+    animation-delay: 5s;
+}
+
+.cloud3 {
+    top: 60%;
+    left: -8%;
+    animation-duration: 60s;
+    animation-delay: 10s;
+}
+
+.cloud4 {
+    top: 75%;
+    left: -15%;
+    animation-duration: 50s;
+    animation-delay: 15s;
+}
+
+@keyframes cloudFloat {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(110vw);
+    }
+    50.01% {
+        transform: translateX(-15%);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* Main Container */
+.container {
+    max-width: 700px;
+    width: 100%;
+    animation: fadeIn 0.8s ease-out;
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+header h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, #2C3E50 0%, #3498db 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* Search Container */
+.search-container {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.search-box {
+    display: flex;
+    gap: 12px;
+}
+
+#cityInput {
+    flex: 1;
+    padding: 18px 24px;
+    font-size: 1.1rem;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    color: var(--text-dark);
+}
+
+#cityInput:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 1);
+    border-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+#cityInput::placeholder {
+    color: #718096;
+}
+
+#searchBtn {
+    padding: 18px 35px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(74, 144, 226, 0.4);
+    white-space: nowrap;
+}
+
+#searchBtn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(74, 144, 226, 0.5);
+    background: linear-gradient(135deg, #357ABD 0%, #2E5C8A 100%);
+}
+
+#searchBtn:active {
+    transform: translateY(0);
+}
+
+/* Suggestions Dropdown */
+.modern-suggestions {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    max-height: 350px;
+    overflow-y: auto;
+    z-index: 1000;
+    margin-top: 8px;
+}
+
+.modern-suggestions::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modern-suggestions::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+}
+
+.modern-suggestions::-webkit-scrollbar-thumb {
+    background: rgba(74, 144, 226, 0.5);
+    border-radius: 10px;
+}
+
+.suggestion-item {
+    padding: 15px 24px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: background 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background: rgba(74, 144, 226, 0.1);
+}
+
+.suggestion-item strong {
+    color: var(--text-dark);
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.suggestion-item span {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    padding: 4px 10px;
+    background: rgba(74, 144, 226, 0.15);
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+/* Error Message */
+.modern-error-message {
+    display: none;
+    background: linear-gradient(135deg, #FF6B9D 0%, #E74C3C 100%);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 16px;
+    margin-top: 15px;
+    text-align: center;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(255, 107, 157, 0.4);
+}
+
+.modern-error-message.show {
+    display: block;
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* Featured Cities - Modern Card Design */
+.featured-cities {
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 24px;
+    padding: 40px;
+    margin-top: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.featured-cities h3 {
+    color: var(--text-dark);
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: 700;
+    position: relative;
+}
+
+.featured-cities h3::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #3498db, #2ecc71);
+    margin: 12px auto 0;
+    border-radius: 2px;
+}
+
+.city-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.city-btn {
+    padding: 22px 20px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--text-dark);
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+    min-height: 90px;
+}
+
+.city-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(46, 204, 113, 0.2) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.city-btn:hover::before {
+    opacity: 1;
+}
+
+.city-emoji {
+    font-size: 2rem;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+}
+
+.city-btn:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(52, 152, 219, 0.35);
+    border-color: #3498db;
+    background: rgba(255, 255, 255, 1);
+}
+
+.city-btn:hover .city-emoji {
+    transform: scale(1.25) rotate(15deg);
+}
+
+.city-btn:active {
+    transform: translateY(-2px) scale(0.98);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--text-dark);
+    opacity: 0.9;
+    font-size: 0.95rem;
+    text-shadow: 0 2px 4px rgba(255, 255, 255, 0.5);
+    font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .city-buttons {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2.5rem;
+    }
+    
+    .search-box {
+        flex-direction: column;
+    }
+
+    #searchBtn {
+        width: 100%;
+    }
+
+    .featured-cities {
+        padding: 35px 25px;
+    }
+
+    .featured-cities h3 {
+        font-size: 1.8rem;
+    }
+
+    .city-buttons {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .city-btn {
+        padding: 25px 15px;
+    }
+
+    .city-emoji {
+        font-size: 2.5rem;
+    }
+
+    .city-btn span:not(.city-emoji) {
+        font-size: 1rem;
+    }
+
+    .sun {
+        width: 70px;
+        height: 70px;
+        top: 30px;
+        right: 30px;
+    }
+
+    .cloud {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .featured-cities {
+        padding: 30px 20px;
+    }
+
+    .featured-cities h3 {
+        font-size: 1.5rem;
+    }
+
+    .city-buttons {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .city-btn {
+        padding: 20px 10px;
+    }
+
+    .city-emoji {
+        font-size: 2rem;
+    }
+
+    .city-btn span:not(.city-emoji) {
+        font-size: 0.9rem;
+    }
+
+    .cloud {
+        font-size: 2.5rem;
+    }
+
+    .sun {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* Accessibility */
+button:focus-visible {
+    outline: 3px solid rgba(74, 144, 226, 0.6);
+    outline-offset: 2px;
+}
+
+input:focus-visible {
+    outline: 3px solid rgba(74, 144, 226, 0.6);
+    outline-offset: 0;
+}
+
+::selection {
+    background: rgba(74, 144, 226, 0.3);
+    color: var(--text-dark);
+}
