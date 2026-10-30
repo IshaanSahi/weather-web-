@@ -98,13 +98,13 @@ public class WeatherService {
         dto.setCountry(location.country());
         dto.setTemperature(valueOrZero(current.temperature()));
         dto.setFeelsLike(valueOrZero(current.feelsLike()));
-        dto.setHumidity(valueOrZero(current.humidity()));
+        dto.setHumidity(current.humidity() == null ? 0 : current.humidity());
         dto.setPressure((int) Math.round(valueOrZero(current.pressure())));
         dto.setWindSpeed(valueOrZero(current.windSpeed()));
         dto.setWindDeg(current.windDirection());
         dto.setWindGust(current.windGust());
         dto.setVisibility(current.visibility() == null ? 0 : (int) Math.round(current.visibility()));
-        dto.setCloudiness(valueOrZero(current.cloudCover()));
+        dto.setCloudiness(current.cloudCover() == null ? 0 : current.cloudCover());
         dto.setTimezoneOffset(timezoneOffset);
         dto.setDt(toEpochSeconds(current.time(), timezoneOffset));
 
