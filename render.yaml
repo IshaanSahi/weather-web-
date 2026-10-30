@@ -9,5 +9,3 @@ services:
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-      - key: WEATHER_API_KEY
-        sync: false

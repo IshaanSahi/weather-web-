@@ -112,9 +112,8 @@ function displayWeather(data) {
     }
     
     // Update weather icon
-    const iconUrl = `https://openweathermap.org/img/wn/${data.icon}@4x.png`;
-    weatherIconEl.src = iconUrl;
-    weatherIconEl.alt = data.description || 'Weather icon';
+    weatherIconEl.textContent = getWeatherEmoji(data.weatherMain);
+    weatherIconEl.setAttribute('aria-label', data.description || 'Weather icon');
     
     // Update temperature
     temperatureEl.textContent = `${formatTemperature(data.temperature)}°C`;
@@ -196,6 +195,18 @@ function getCityLocalDate(timestamp, timezoneOffset = 0) {
 
 function formatTemperature(value) {
     return Number(value).toFixed(1);
+}
+
+function getWeatherEmoji(condition) {
+    const icons = {
+        Clear: '\u2600\uFE0F',
+        Clouds: '\u2601\uFE0F',
+        Fog: '\uD83C\uDF2B\uFE0F',
+        Rain: '\uD83C\uDF27\uFE0F',
+        Snow: '\u2744\uFE0F',
+        Thunderstorm: '\u26C8\uFE0F'
+    };
+    return icons[condition] || '\u2601\uFE0F';
 }
 
 // Helper function to convert wind degrees to direction

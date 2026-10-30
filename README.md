@@ -1,6 +1,6 @@
 # Weather Now 🌤️
 
-A responsive weather web application that lets users search for a city and view its current weather conditions. The project uses a vanilla HTML/CSS/JavaScript frontend and a Java Spring Boot backend that retrieves weather data from the OpenWeather API. The root Dockerfile packages both the frontend and backend into one service, so the app can be deployed without a separate frontend host or database.
+A responsive weather web application that lets users search for a city and view its current weather conditions. The project uses a vanilla HTML/CSS/JavaScript frontend and a Java Spring Boot backend that retrieves weather data from Open-Meteo. The root Dockerfile packages both frontend and backend into one service, so the app can be deployed without a separate frontend host or database.
 
 ## Features
 
@@ -8,7 +8,7 @@ A responsive weather web application that lets users search for a city and view 
 - Explore popular cities from the home page.
 - View current temperature and feels-like temperature.
 - View weather conditions and an associated weather icon.
-- View minimum and maximum temperature, humidity, pressure, wind speed and direction, wind gust, visibility, cloud cover, sunrise, and sunset when provided by the API.
+- View current conditions, daily minimum and maximum temperature, humidity, pressure, wind speed and direction, wind gust, visibility, cloud cover, sunrise, and sunset.
 - Animated sky, sun, and cloud visuals.
 - Loading and error states for weather requests.
 - Backend endpoint that returns weather data as JSON.
@@ -28,8 +28,9 @@ A responsive weather web application that lets users search for a city and view 
 - Spring Security and CORS configuration
 - Gradle
 
-**External service**
-- [OpenWeather API](https://openweathermap.org/api)
+**External services**
+- [Open-Meteo Weather API](https://open-meteo.com/en/docs)
+- [Open-Meteo Geocoding API](https://open-meteo.com/en/docs/geocoding-api)
 
 ## Project Structure
 
@@ -50,7 +51,7 @@ weather-web-main/
 │   │   ├── config/             # Security and CORS configuration
 │   │   ├── controller/         # REST endpoint
 │   │   ├── dto/                # Weather response/data objects
-│   │   ├── service/             # OpenWeather API integration
+│   │   ├── service/             # Open-Meteo geocoding and weather integration
 │   │   └── WeatherWebApplication.java
 │   ├── src/main/resources/
 │   │   └── application.properties
@@ -63,31 +64,17 @@ weather-web-main/
 ## Prerequisites
 
 - Java Development Kit (JDK) 21, if running the backend locally.
-- An OpenWeather API key.
 - A modern browser.
 - Docker, if using the containerized setup.
 - Gradle Wrapper is included in the backend folder.
 
 ## Configuration
 
-### 1. OpenWeather API key
+### City autocomplete
 
-Create an API key in your [OpenWeather account](https://home.openweathermap.org/api_keys).
+The frontend autocomplete uses Open-Meteo's public geocoding API, which does not require a key for the free tier. The backend independently geocodes the submitted city before requesting its weather. Review Open-Meteo's current usage and attribution terms before using the public endpoints.
 
-The backend reads `WEATHER_API_KEY` from its environment:
-
-```properties
-weather.api.key=${WEATHER_API_KEY}
-weather.api.url=https://api.openweathermap.org/data/2.5/weather
-```
-
-Set `WEATHER_API_KEY` in your environment before starting the backend. Never commit API keys. If a key has ever been committed, revoke it with the provider and create a replacement; removing it from the latest source does not remove it from Git history.
-
-### 2. City autocomplete
-
-The frontend autocomplete is not configured for deployment because its current implementation would expose the OpenWeather key in browser requests. Do not put a real key in `Frontend/javascript/weather.js`; move geocoding requests behind the backend before enabling autocomplete in production. City searches can still be submitted directly.
-
-### 3. Backend URL
+### Backend URL
 
 During local development, the results page calls:
 
@@ -105,12 +92,6 @@ Open a terminal and run:
 
 ```bash
 cd backend
-```
-
-Set the API key in the same terminal session:
-
-```bash
-export WEATHER_API_KEY="your_openweather_api_key"
 ```
 
 Start Spring Boot:
@@ -146,7 +127,7 @@ You can also use a VS Code live server extension. Avoid opening the HTML file di
 
 ### 3. Test the backend endpoint
 
-With the backend running and a valid API key configured:
+With the backend running:
 
 ```bash
 curl "http://localhost:8080/api/weather?city=London"
@@ -177,15 +158,14 @@ GET http://localhost:8080/api/weather?city=New%20Delhi
 - `404 Not Found` — the city could not be found.
 - `500 Internal Server Error` — the weather service could not retrieve data.
 
-The backend requests metric units from OpenWeather, so temperature is returned in Celsius and wind speed follows the provider's metric-unit convention.
+The backend requests temperatures in Celsius and wind speed in metres per second. It resolves city names to coordinates using Open-Meteo Geocoding, then requests current conditions and daily forecast data from Open-Meteo. Daily min/max values are forecast values, not the current temperature's surrounding-area range. Provider observations and model estimates can differ by location and update time; the app displays the selected provider's data rather than adjusting readings to match another service.
 
 ## Free deployment on Render
 
 The Render Blueprint in `render.yaml` deploys the root Dockerfile as one web service. The Docker image includes the frontend and Spring Boot API, and the app does not require a database.
 
 1. Push this repository to GitHub and connect it to Render as a Blueprint.
-2. When Render prompts for `WEATHER_API_KEY`, enter a newly created OpenWeather API key as a secret environment variable. Do not put the key in this repository.
-3. Deploy the service. Render assigns its public URL; open that URL to use the app.
+2. Deploy the service. No weather API key or database is required for the Open-Meteo free endpoints. Render assigns its public URL; open that URL to use the app.
 
 The free web service may spin down after inactivity, which can make its first request slow. Free-tier limits and availability can change; confirm current terms with Render. No paid domain or database is required.
 
@@ -193,7 +173,7 @@ To build locally with Docker:
 
 ```bash
 docker build -t weather-now .
-docker run --rm -p 8080:8080 -e WEATHER_API_KEY="your_openweather_api_key" weather-now
+docker run --rm -p 8080:8080 weather-now
 ```
 
 Open `http://localhost:8080` to use the app. The container uses Java 21 and honors the `PORT` environment variable set by Render.
@@ -204,16 +184,15 @@ The production frontend and API are served from the same Render service over HTT
 
 ## Troubleshooting
 
-- **Weather request fails:** Check that the backend is running, the API key is valid, and the provider account has API access.
+- **Weather request fails:** Check that the backend is running and that Open-Meteo endpoints are reachable.
 - **City not found:** Check the spelling and try a city name with its country if needed.
 - **Frontend shows a network error:** Verify `API_BASE_URL` and confirm the browser can reach the backend.
-- **Autocomplete does not work:** Check the geocoding API key and use an HTTPS URL.
-- **Works locally but not after deployment:** Check that Render has a valid `WEATHER_API_KEY` secret and that the deployment completed successfully.
+- **Autocomplete does not work:** Check browser network access to the Open-Meteo Geocoding API.
+- **Works locally but not after deployment:** Check that the latest deployment completed successfully and review Render logs for upstream API errors.
 
 ## Security Notes
 
-- Never commit API keys, passwords, or other secrets.
-- Keep provider keys on the backend wherever possible.
+- The current Open-Meteo public endpoints do not require API keys. If switching to a provider that requires one, keep it in backend environment secrets.
 - The frontend and API are same-origin in production; local development CORS is restricted to localhost.
 - The current Spring Security configuration permits all requests; review access controls before adding sensitive endpoints.
 

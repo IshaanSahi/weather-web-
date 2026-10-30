@@ -1,6 +1,5 @@
 // API Configuration
-const GEOCODING_API_URL = 'http://api.openweathermap.org/geo/1.0/direct';
-const API_KEY = 'API_KEY'; // Replace with your actual API key
+const GEOCODING_API_URL = 'https://geocoding-api.open-meteo.com/v1/search';
 
 // DOM Elements
 const cityInput = document.getElementById('cityInput');
@@ -84,7 +83,7 @@ cityInput.addEventListener('input', async (e) => {
 
 async function fetchCitySuggestions(query) {
     try {
-        const url = `${GEOCODING_API_URL}?q=${encodeURIComponent(query)}&limit=5&appid=${API_KEY}`;
+        const url = `${GEOCODING_API_URL}?name=${encodeURIComponent(query)}&count=5&language=en&format=json`;
         const response = await fetch(url);
         
         if (!response.ok) {
@@ -92,8 +91,8 @@ async function fetchCitySuggestions(query) {
             return;
         }
         
-        const cities = await response.json();
-        displaySuggestions(cities);
+        const data = await response.json();
+        displaySuggestions(data.results || []);
     } catch (error) {
         console.error('Error fetching city suggestions:', error);
         hideSuggestions();
@@ -116,10 +115,11 @@ function displaySuggestions(cities) {
         const state = city.state ? `, ${city.state}` : '';
         const country = city.country;
         
-        suggestionItem.innerHTML = `
-            <strong>${cityName}${state}</strong>
-            <span>${country}</span>
-        `;
+        const name = document.createElement('strong');
+        name.textContent = `${cityName}${state}`;
+        const countryLabel = document.createElement('span');
+        countryLabel.textContent = country;
+        suggestionItem.append(name, countryLabel);
         
         suggestionItem.addEventListener('click', () => {
             isSelectingSuggestion = true;
