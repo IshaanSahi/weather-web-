@@ -3,6 +3,8 @@ package com.weather.weather_web.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ import com.weather.weather_web.service.WeatherService;
 @RestController
 @RequestMapping("/api/weather")
 public class WeatherController {
+
+    private static final Logger logger = LoggerFactory.getLogger(WeatherController.class);
     
     private final WeatherService weatherService;
     
@@ -37,6 +41,7 @@ public class WeatherController {
             return ResponseEntity.ok(weather);
             
         } catch (RuntimeException e) {
+            logger.error("Weather request failed", e);
             if (e.getMessage().contains("City not found")) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(createErrorResponse("City not found. Please check the spelling and try again."));
