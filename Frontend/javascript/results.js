@@ -105,7 +105,7 @@ function displayWeather(data) {
     
     // Update last updated time
     if (data.dt) {
-        const date = new Date(data.dt * 1000);
+        const date = getCityLocalDate(data.dt, data.timezoneOffset);
         lastUpdatedEl.textContent = `Updated: ${formatTime(date)} on ${formatDate(date)}`;
     } else {
         lastUpdatedEl.textContent = 'Updated: Just now';
@@ -117,24 +117,24 @@ function displayWeather(data) {
     weatherIconEl.alt = data.description || 'Weather icon';
     
     // Update temperature
-    temperatureEl.textContent = `${Math.round(data.temperature)}°`;
+    temperatureEl.textContent = `${formatTemperature(data.temperature)}°C`;
     weatherDescEl.textContent = data.description || 'No description';
     
     // Update min/max temperature
     if (data.tempMin !== undefined) {
-        tempMinEl.textContent = `${Math.round(data.tempMin)}°C`;
+        tempMinEl.textContent = `${formatTemperature(data.tempMin)}°C`;
     } else {
         tempMinEl.textContent = '--°C';
     }
     
     if (data.tempMax !== undefined) {
-        tempMaxEl.textContent = `${Math.round(data.tempMax)}°C`;
+        tempMaxEl.textContent = `${formatTemperature(data.tempMax)}°C`;
     } else {
         tempMaxEl.textContent = '--°C';
     }
     
     // Update feels like
-    feelsLikeEl.textContent = `${Math.round(data.feelsLike)}°C`;
+    feelsLikeEl.textContent = `${formatTemperature(data.feelsLike)}°C`;
     
     // Update wind data
     windSpeedEl.textContent = `${data.windSpeed} m/s`;
@@ -173,14 +173,14 @@ function displayWeather(data) {
     
     // Update sunrise/sunset times
     if (data.sunrise) {
-        const sunriseDate = new Date(data.sunrise * 1000);
+        const sunriseDate = getCityLocalDate(data.sunrise, data.timezoneOffset);
         sunriseEl.textContent = formatTime(sunriseDate);
     } else {
         sunriseEl.textContent = '--:--';
     }
     
     if (data.sunset) {
-        const sunsetDate = new Date(data.sunset * 1000);
+        const sunsetDate = getCityLocalDate(data.sunset, data.timezoneOffset);
         sunsetEl.textContent = formatTime(sunsetDate);
     } else {
         sunsetEl.textContent = '--:--';
@@ -188,6 +188,14 @@ function displayWeather(data) {
     
     // Show weather container with animation
     showWeatherContainer();
+}
+
+function getCityLocalDate(timestamp, timezoneOffset = 0) {
+    return new Date((timestamp + timezoneOffset) * 1000);
+}
+
+function formatTemperature(value) {
+    return Number(value).toFixed(1);
 }
 
 // Helper function to convert wind degrees to direction
@@ -199,14 +207,14 @@ function getWindDirection(degrees) {
 
 // Helper function to format time
 function formatTime(date) {
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes}`;
 }
 
 // Helper function to format date
 function formatDate(date) {
-    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+    const options = { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' };
     return date.toLocaleDateString('en-US', options);
 }
 

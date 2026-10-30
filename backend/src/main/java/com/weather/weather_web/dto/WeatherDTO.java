@@ -23,6 +23,7 @@ public class WeatherDTO {
     private long dt;
     private long sunrise;
     private long sunset;
+    private int timezoneOffset;
     
     public WeatherDTO() {
     }
@@ -192,5 +193,13 @@ public class WeatherDTO {
     
     public void setSunset(long sunset) {
         this.sunset = sunset;
+    }
+
+    public int getTimezoneOffset() {
+        return timezoneOffset;
+    }
+
+    public void setTimezoneOffset(int timezoneOffset) {
+        this.timezoneOffset = timezoneOffset;
     }
 }

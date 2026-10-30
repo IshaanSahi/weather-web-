@@ -86,6 +86,9 @@ public class WeatherService {
         if (response.getDt() != null) {
             dto.setDt(response.getDt());
         }
+        if (response.getTimezone() != null) {
+            dto.setTimezoneOffset(response.getTimezone());
+        }
         
         // Set sunrise and sunset
         if (response.getSys() != null) {

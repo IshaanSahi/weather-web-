@@ -15,6 +15,7 @@ public class WeatherResponse {
     private Sys sys;
     private Integer visibility;
     private Long dt;
+    private Integer timezone;
     
     // Getters and Setters
     public Main getMain() {
@@ -79,6 +80,14 @@ public class WeatherResponse {
     
     public void setDt(Long dt) {
         this.dt = dt;
+    }
+
+    public Integer getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(Integer timezone) {
+        this.timezone = timezone;
     }
     
     @JsonIgnoreProperties(ignoreUnknown = true)
