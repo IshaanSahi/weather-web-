@@ -3,13 +3,15 @@ const API_BASE_URL = ['localhost', '127.0.0.1'].includes(window.location.hostnam
     ? 'http://localhost:8080/api/weather'
     : '/api/weather';
 
+// hi thois is ishaam
 // DOM Elements
 const loadingSpinner = document.getElementById('loadingSpinner');
 const errorMessage = document.getElementById('errorMessage');
 const errorText = document.getElementById('errorText');
 const weatherContainer = document.getElementById('weatherContainer');
 
-// Update class names for new design
+// Update class n
+// ames for new design
 if (loadingSpinner) {
     loadingSpinner.className = 'modern-loading-container';
 }
