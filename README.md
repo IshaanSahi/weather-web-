@@ -1,6 +1,6 @@
 # Weather Now 🌤️
 
-A responsive weather web application that lets users search for a city and view its current weather conditions. The project uses a vanilla HTML/CSS/JavaScript frontend and a Java Spring Boot backend that retrieves weather data from the OpenWeather API.
+A responsive weather web application that lets users search for a city and view its current weather conditions. The project uses a vanilla HTML/CSS/JavaScript frontend and a Java Spring Boot backend that retrieves weather data from the OpenWeather API. The root Dockerfile packages both the frontend and backend into one service, so the app can be deployed without a separate frontend host or database.
 
 ## Features
 
@@ -74,28 +74,28 @@ weather-web-main/
 
 Create an API key in your [OpenWeather account](https://home.openweathermap.org/api_keys).
 
-The backend reads `weather.api.key` from `backend/src/main/resources/application.properties`. For safer configuration, change the property to use an environment variable:
+The backend reads `WEATHER_API_KEY` from its environment:
 
 ```properties
 weather.api.key=${WEATHER_API_KEY}
 weather.api.url=https://api.openweathermap.org/data/2.5/weather
 ```
 
-Then set `WEATHER_API_KEY` in your environment before starting the backend. Do not commit real API keys to GitHub. If a key has already been committed, revoke or rotate it in the provider dashboard.
+Set `WEATHER_API_KEY` in your environment before starting the backend. Never commit API keys. If a key has ever been committed, revoke it with the provider and create a replacement; removing it from the latest source does not remove it from Git history.
 
 ### 2. City autocomplete
 
-The frontend autocomplete in `Frontend/javascript/weather.js` uses the OpenWeather Geocoding API. Replace its `API_KEY` placeholder with a valid key for local testing, or preferably move autocomplete requests behind the backend so the key is not exposed in browser code. The current geocoding URL uses HTTP; use HTTPS.
+The frontend autocomplete is not configured for deployment because its current implementation would expose the OpenWeather key in browser requests. Do not put a real key in `Frontend/javascript/weather.js`; move geocoding requests behind the backend before enabling autocomplete in production. City searches can still be submitted directly.
 
 ### 3. Backend URL
 
-The results page currently calls:
+During local development, the results page calls:
 
 ```javascript
 const API_BASE_URL = 'http://localhost:8080/api/weather';
 ```
 
-This is suitable for local development only. For deployment, change it to the deployed backend URL or configure a shared environment-based API URL in the frontend.
+In deployment, the frontend calls `/api/weather` on the same origin, so no frontend API URL or cross-origin setup is needed.
 
 ## Run Locally
 
@@ -113,7 +113,7 @@ Set the API key in the same terminal session:
 export WEATHER_API_KEY="your_openweather_api_key"
 ```
 
-After updating `application.properties` as shown above, start Spring Boot:
+Start Spring Boot:
 
 ```bash
 ./gradlew bootRun
@@ -179,34 +179,28 @@ GET http://localhost:8080/api/weather?city=New%20Delhi
 
 The backend requests metric units from OpenWeather, so temperature is returned in Celsius and wind speed follows the provider's metric-unit convention.
 
-## Docker
+## Free deployment on Render
 
-The repository includes a root-level Dockerfile and a backend Dockerfile. From the repository root, build the image:
+The Render Blueprint in `render.yaml` deploys the root Dockerfile as one web service. The Docker image includes the frontend and Spring Boot API, and the app does not require a database.
+
+1. Push this repository to GitHub and connect it to Render as a Blueprint.
+2. When Render prompts for `WEATHER_API_KEY`, enter a newly created OpenWeather API key as a secret environment variable. Do not put the key in this repository.
+3. Deploy the service. Render assigns its public URL; open that URL to use the app.
+
+The free web service may spin down after inactivity, which can make its first request slow. Free-tier limits and availability can change; confirm current terms with Render. No paid domain or database is required.
+
+To build locally with Docker:
 
 ```bash
 docker build -t weather-now .
+docker run --rm -p 8080:8080 -e WEATHER_API_KEY="your_openweather_api_key" weather-now
 ```
 
-Run it with the API key configured. This assumes the backend property has been changed to read `WEATHER_API_KEY` as described above:
-
-```bash
-docker run --rm -p 8080:8080 \
-  -e WEATHER_API_KEY="your_openweather_api_key" \
-  weather-now
-```
-
-The container uses Java 21. The application supports the `PORT` environment variable for deployment platforms that assign a port dynamically.
+Open `http://localhost:8080` to use the app. The container uses Java 21 and honors the `PORT` environment variable set by Render.
 
 ## Deployment Notes
 
-A `render.yaml` file is included for Render deployment. Before deploying:
-
-1. Configure `WEATHER_API_KEY` as a secret environment variable in the hosting dashboard.
-2. Update `application.properties` to read the key from that variable.
-3. Update the frontend API URL from `localhost` to the deployed backend URL.
-4. Configure city autocomplete securely; browser-side API keys are visible to users.
-5. Restrict CORS to the actual frontend domain for production. The current backend configuration allows all origins.
-6. Ensure the frontend is served over HTTPS and uses HTTPS API endpoints.
+The production frontend and API are served from the same Render service over HTTPS. Local development uses a separate static server and permits only the documented localhost origins for API requests.
 
 ## Troubleshooting
 
@@ -214,13 +208,13 @@ A `render.yaml` file is included for Render deployment. Before deploying:
 - **City not found:** Check the spelling and try a city name with its country if needed.
 - **Frontend shows a network error:** Verify `API_BASE_URL` and confirm the browser can reach the backend.
 - **Autocomplete does not work:** Check the geocoding API key and use an HTTPS URL.
-- **Works locally but not after deployment:** Replace `localhost` with the deployed backend URL and review CORS settings.
+- **Works locally but not after deployment:** Check that Render has a valid `WEATHER_API_KEY` secret and that the deployment completed successfully.
 
 ## Security Notes
 
 - Never commit API keys, passwords, or other secrets.
 - Keep provider keys on the backend wherever possible.
-- Restrict CORS to trusted frontend origins in production.
+- The frontend and API are same-origin in production; local development CORS is restricted to localhost.
 - The current Spring Security configuration permits all requests; review access controls before adding sensitive endpoints.
 
 ## License

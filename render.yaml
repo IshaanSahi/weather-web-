@@ -2,11 +2,12 @@ services:
   - type: web
     name: weather-web
     runtime: docker
-    env: docker
     plan: free
     region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     envVars:
-      - key: PORT
-        value: 10000
       - key: SPRING_PROFILES_ACTIVE
         value: prod
+      - key: WEATHER_API_KEY
+        sync: false

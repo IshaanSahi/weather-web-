@@ -11,9 +11,12 @@ COPY backend/gradle ./gradle
 
 # Copy source code
 COPY backend/src ./src
+COPY Frontend/html/*.html ./src/main/resources/static/
+COPY Frontend/css ./src/main/resources/static/css
+COPY Frontend/javascript ./src/main/resources/static/javascript
 
-# Build the application (skip tests for faster builds)
-RUN ./gradlew clean build -x test --no-daemon
+# Build the application and run tests
+RUN ./gradlew clean build --no-daemon
 
 # Stage 2: Run the application
 FROM eclipse-temurin:21-jre-alpine
