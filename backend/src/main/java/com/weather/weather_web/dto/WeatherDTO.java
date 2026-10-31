@@ -11,9 +11,7 @@ public class WeatherDTO {
     private int humidity;
     private double windSpeed;
     private int pressure;
-    private String icon;
     
-    // New fields
     private double tempMin;
     private double tempMax;
     private int visibility;
@@ -23,13 +21,14 @@ public class WeatherDTO {
     private long dt;
     private long sunrise;
     private long sunset;
+    private int timezoneOffset;
     
     public WeatherDTO() {
     }
     
     public WeatherDTO(String cityName, String country, double temperature, 
                      double feelsLike, String description, String weatherMain,
-                     int humidity, double windSpeed, int pressure, String icon) {
+                     int humidity, double windSpeed, int pressure) {
         this.cityName = cityName;
         this.country = country;
         this.temperature = temperature;
@@ -39,7 +38,6 @@ public class WeatherDTO {
         this.humidity = humidity;
         this.windSpeed = windSpeed;
         this.pressure = pressure;
-        this.icon = icon;
     }
     
     public String getCityName() {
@@ -114,14 +112,6 @@ public class WeatherDTO {
         this.pressure = pressure;
     }
     
-    public String getIcon() {
-        return icon;
-    }
-    
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-    
     public double getTempMin() {
         return tempMin;
     }
@@ -192,5 +182,13 @@ public class WeatherDTO {
     
     public void setSunset(long sunset) {
         this.sunset = sunset;
+    }
+
+    public int getTimezoneOffset() {
+        return timezoneOffset;
+    }
+
+    public void setTimezoneOffset(int timezoneOffset) {
+        this.timezoneOffset = timezoneOffset;
     }
 }

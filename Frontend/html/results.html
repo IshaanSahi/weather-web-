@@ -74,10 +74,10 @@
             <div class="main-weather-display">
                 <div class="weather-visual">
                     <div class="icon-backdrop"></div>
-                    <img id="weatherIcon" src="" alt="Weather icon" class="main-weather-icon">
+                    <span id="weatherIcon" role="img" aria-label="Weather icon" class="main-weather-icon"></span>
                 </div>
                 <div class="temperature-section">
-                    <h2 id="temperature" class="main-temperature">--°</h2>
+                    <h2 id="temperature" class="main-temperature">--°C</h2>
                     <p id="weatherDescription" class="weather-condition">Description</p>
                     <div class="feels-like-badge">
                         <span class="badge-icon">🌡️</span>
@@ -90,7 +90,7 @@
                 <div class="range-item min-temp">
                     <span class="range-icon">❄️</span>
                     <div class="range-text">
-                        <span class="range-label">Min</span>
+                        <span class="range-label">Daily min</span>
                         <span id="tempMin" class="range-value">--°</span>
                     </div>
                 </div>
@@ -98,7 +98,7 @@
                 <div class="range-item max-temp">
                     <span class="range-icon">🔥</span>
                     <div class="range-text">
-                        <span class="range-label">Max</span>
+                        <span class="range-label">Daily max</span>
                         <span id="tempMax" class="range-value">--°</span>
                     </div>
                 </div>
@@ -151,7 +151,7 @@
             <div class="glass-detail-card">
                 <div class="card-icon-bubble pressure-icon">🎈</div>
                 <div class="card-info">
-                    <p class="detail-label">Pressure</p>
+                    <p class="detail-label">Pressure (MSL)</p>
                     <p id="pressure" class="detail-value">-- hPa</p>
                 </div>
                 <div class="card-decoration"></div>
@@ -210,8 +210,9 @@
             <div class="footer-glass-card">
                 <p class="footer-credit">
                     <span class="credit-icon">⚡</span>
-                    Powered by OpenWeatherMap API
+                    Weather data by <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>
                 </p>
+                <p class="footer-credit">Current readings can differ between providers, locations, and observation models.</p>
                 <button onclick="window.location.href='index.html'" class="new-search-glass-btn">
                     <span class="btn-emoji">🔍</span>
                     <span>Search Another City</span>
